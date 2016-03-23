@@ -1,0 +1,40 @@
+{
+  "name": "bark",
+  "version": "0.0.1",
+  "description": "Parse barcode inputs into a unified GS1-128 like format",
+  "homepage": "https://github.com/Sleavely/Bark-js",
+  "keywords": [
+    "barcode",
+    "EAN",
+    "UPC",
+    "GS1"
+  ],
+  "author": "Joakim Hedlund <contact@joakimhedlund.com>",
+  "contributors": [
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sleavely/Bark-JS"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "lodash": "~2.4.1",
+    "cli-color": "~0.2.3",
+    "chai": "~1.8.1",
+    "mocha": "~1.17.0"
+  },
+  "main": "lib/main.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "engines": {
+    "node": ">=0.4.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/Sleavely/Bark-JS/raw/master/LICENSE"
+    }
+  ]
+}
