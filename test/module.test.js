@@ -39,9 +39,20 @@ describe('Bark', function( done ) {
     done();
   });
 
-  it('should parse the BEST BEFORE from a GS1-128 code', function( done ) {
+  it('should parse the BEST BEFORE', function( done ) {
     Bark.parse('015730033004934115160817');
     expect( Bark.get('BEST BEFORE') ).to.equal( '160817' );
+    done();
+  });
+
+  it('should parse the NET WEIGHT with 3 decimal points', function( done ) {
+    Bark.parse('01573003300493413103160817');
+    expect( Bark.get('NET WEIGHT') ).to.equal( 160.817 );
+    done();
+  });
+  it('should parse the NET WEIGHT without decimal points', function( done ) {
+    Bark.parse('01573003300493413100160817');
+    expect( Bark.get('NET WEIGHT') ).to.equal( 160817 );
     done();
   });
 
