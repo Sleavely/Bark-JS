@@ -14,7 +14,21 @@ describe('Bark', function( done ) {
     expect( Bark ).to.exist;
     done();
   });
+  it('should set its config', function(done) {
+    expect( Bark.config ).to.exist;
+    done();
+  });
+  it('should default to safe mode', function(done) {
+    expect( Bark.config.safemode ).to.equal( true );
+    done();
+  });
+  it('should default to non-verbosity', function(done) {
+    expect( Bark.config.verbose ).to.equal( false );
+    done();
+  });
+});
 
+describe('Bark.parse()', function( done ) {
   it('should parse an EAN-13', function( done ) {
     Bark.parse('3281014704901');
     expect( Bark.type ).to.equal( 'EAN-13' );
@@ -53,6 +67,19 @@ describe('Bark', function( done ) {
   it('should parse the NET WEIGHT without decimal points', function( done ) {
     Bark.parse('01573003300493413100160817');
     expect( Bark.get('NET WEIGHT') ).to.equal( 160817 );
+    done();
+  });
+
+  it('should clear parsed AIs in safemode when it encounters an error', function( done ) {
+    Bark.parse('01573003300493419999999999999');
+    expect( Bark.id() ).to.equal( '01573003300493419999999999999' );
+    expect( Bark.get('GTIN') ).to.equal( undefined );
+    done();
+  });
+  it('should not clear parsed AIs in when safemode is off', function( done ) {
+    Bark.setConfig({safemode: false});
+    Bark.parse('01573003300493419999999999999');
+    expect( Bark.get('GTIN') ).to.equal( '57300330049341' );
     done();
   });
 
