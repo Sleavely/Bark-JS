@@ -12,7 +12,7 @@ Bark attempts to figure out which standard the string uses (EAN-8, EAN-13, ITF-1
 ## How to use it
 
 ```
-npm install bark
+npm install bark-js
 ```
 
 ### Examples
@@ -20,7 +20,7 @@ npm install bark
 Let's pretend we scan [the box in this photo](https://goo.gl/photos/HCE7WrNHDKvQL5ei8).
 
 ```javascript
-var Bark = require('bark');
+var Bark = require('bark-js');
 var yourInput = '015730033004265615171019';
 
 console.log(Bark.parse( yourInput )); // parse returns the GTIN, or undefined
@@ -41,7 +41,7 @@ If you are going to scan regular barcodes too (e.g. EAN-13, ITF-14, etc.) and on
 The important distinction from `parse()` is that `id()` will return the string itself if the barcode was not interpreted as GS1-128.
 
 ```javascript
-var Bark = require('bark');
+var Bark = require('bark-js');
 var yourInput = '015730033004265615171019';
 
 console.log(Bark.id( yourInput )); // 57300330042656
@@ -58,7 +58,7 @@ Pull requests to Sleavely/Bark-JS are encouraged and appreciated!
 
 (MIT License)
 
-Copyright (c) 2016 Joakim Hedlund
+Copyright (c) 2017 Joakim Hedlund
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
