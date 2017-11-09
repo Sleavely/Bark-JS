@@ -15,5 +15,5 @@
     "chai": "~1.8.1",
     "mocha": "~1.17.0"
   },
-  "main": "lib/main.js"
+  "main": "lib/bark.js"
 }
