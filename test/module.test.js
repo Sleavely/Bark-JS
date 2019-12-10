@@ -3,89 +3,58 @@
   or `./node_modules/.bin/mocha --reporter spec`
 */
 
-var path = require('path')
-var Bark = require(path.resolve(path.join(__dirname, '..')))
+const src = require('path').resolve(process.cwd(), 'src')
+const bark = require(`${src}/index.js`)
 
-describe('Bark', function () {
-  it('should load as a module', function (done) {
-    expect(Bark).toBeDefined()
-    done()
-  })
-  it('should set its config', function (done) {
-    expect(Bark.config).toBeDefined()
-    done()
-  })
-  it('should default to safe mode', function (done) {
-    expect(Bark.config.safemode).toEqual(true)
-    done()
-  })
-  it('should default to non-verbosity', function (done) {
-    expect(Bark.config.verbose).toEqual(false)
-    done()
-  })
-})
-
-describe('Bark.parse()', function () {
-  it('should parse an EAN-13', function (done) {
-    Bark.parse('3281014704901')
-    expect(Bark.type).toEqual('EAN-13')
-    done()
+describe('Bark', () => {
+  it('should load as a module', () => {
+    expect(bark).toBeDefined()
   })
 
-  it('should parse an ITF-14', function (done) {
-    Bark.parse('17312133015982')
-    expect(Bark.type).toEqual('ITF-14')
-    done()
-  })
-  it('should parse an ITF-14', function (done) {
-    Bark.parse('17312133015982')
-    expect(Bark.type).toEqual('ITF-14')
-    done()
+  describe('assumeGtin', () => {
+    it('should parse an EAN-13', () => {
+      const parsed = bark('3281014704901', { assumeGtin: true })
+      expect(parsed).toMatchObject({
+        elements: expect.arrayContaining([
+          expect.objectContaining({ title: 'GTIN', value: '03281014704901' }),
+        ]),
+      })
+    })
+
+    it('should parse an ITF14', () => {
+      const parsed = bark('17312133015982', { assumeGtin: true })
+      expect(parsed).toMatchObject({
+        elements: expect.arrayContaining([
+          expect.objectContaining({ title: 'GTIN', value: '17312133015982' }),
+        ]),
+      })
+    })
+
+    it('should parse the GTIN from a GS1-128 code', () => {
+      const parsed = bark('015730033004934115160817', { assumeGtin: true })
+      expect(parsed).toMatchObject({
+        elements: expect.arrayContaining([
+          expect.objectContaining({ title: 'GTIN', value: '57300330049341' }),
+        ]),
+      })
+    })
   })
 
-  it('should parse the GTIN from a GS1-128 code', function (done) {
-    Bark.parse('015730033004934115160817')
-    expect(Bark.id()).toEqual('57300330049341')
-    expect(Bark.get('GTIN')).toEqual('57300330049341')
-    done()
+  it('should parse the BEST BEFORE', () => {
+    const parsed = bark('015730033004934115160817')
+    expect(parsed).toMatchObject({
+      elements: expect.arrayContaining([
+        expect.objectContaining({ title: 'BEST BEFORE or BEST BY', value: '2016-08-17' }),
+      ]),
+    })
   })
 
-  it('should parse the BEST BEFORE', function (done) {
-    Bark.parse('015730033004934115160817')
-    expect(Bark.get('BEST BEFORE')).toEqual('160817')
-    done()
-  })
-
-  it('should parse the NET WEIGHT with 3 decimal points', function (done) {
-    Bark.parse('01573003300493413103160817')
-    expect(Bark.get('NET WEIGHT')).toEqual(160.817)
-    done()
-  })
-  it('should parse the NET WEIGHT without decimal points', function (done) {
-    Bark.parse('01573003300493413100160817')
-    expect(Bark.get('NET WEIGHT')).toEqual(160817)
-    done()
-  })
-
-  it('should clear parsed AIs in safemode when it encounters an error', function (done) {
-    Bark.parse('01573003300493419999999999999')
-    expect(Bark.id()).toEqual('01573003300493419999999999999')
-    expect(Bark.get('GTIN')).toEqual(undefined)
-    done()
-  })
-  it('should not clear parsed AIs in when safemode is off', function (done) {
-    Bark.setConfig({ safemode: false })
-    Bark.parse('01573003300493419999999999999')
-    expect(Bark.get('GTIN')).toEqual('57300330049341')
-    done()
-  })
-})
-
-describe('Bark.id()', function () {
-  it('should return the string itself when parse fails', function (done) {
-    Bark.parse('foo bar')
-    expect(Bark.id()).toEqual('foo bar')
-    expect(Bark.get('GTIN')).toEqual(undefined)
-    done()
+  it('should parse the NET WEIGHT with 3 decimal points', () => {
+    const parsed = bark('01573003300493413103160817')
+    expect(parsed).toMatchObject({
+      elements: expect.arrayContaining([
+        expect.objectContaining({ title: 'NET WEIGHT (kg)', value: '160.817' }),
+      ]),
+    })
   })
 })

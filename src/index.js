@@ -17,16 +17,10 @@ const bark = (barcode, settings = {}) => {
   if (options.assumeGtin) {
     const digitsOnly = /^\d+$/.test(input)
     if (digitsOnly) {
-      if (input.length === 11) {
-        this.type = 'UPC-A'
-      } else if (input.length === 12) {
-        this.type = 'UPC-A'
-      } else if (input.length === 13) {
-        this.type = 'EAN-13'
-      } else if (input.length === 14) {
-        this.type = 'ITF-14'
+      if (input.length >= 11 && input.length <= 14) {
+        // We'll assume its one of UPC-A, EAN-13, ITF-14
+        input = `01${input.padStart(14, '0')}`
       }
-      input = `01${input.padStart(14, '0')}`
     }
   }
 
