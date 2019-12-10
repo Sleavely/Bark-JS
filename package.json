@@ -3,38 +3,37 @@
   "version": "0.0.2",
   "description": "Parse barcode inputs into a unified GS1-128 like format",
   "homepage": "https://github.com/Sleavely/Bark-js",
+  "repository": "github:Sleavely/Bark-JS",
+  "author": "Joakim Hedlund <contact@joakimhedlund.com>",
   "keywords": [
     "barcode",
+    "QR",
+    "parser",
     "EAN",
     "UPC",
     "GS1"
   ],
-  "author": "Joakim Hedlund <contact@joakimhedlund.com>",
-  "contributors": [
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Sleavely/Bark-JS"
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
-    "lodash": "~2.4.1",
-    "cli-color": "~0.2.3",
-    "chai": "~1.8.1",
-    "mocha": "~1.17.0"
-  },
-  "main": "lib/main.js",
+  "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "jest --verbose --silent && eslint ."
   },
-  "engines": {
-    "node": ">=0.4.0"
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^9.2.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^24.9.0",
+    "jest-extended": "^0.11.2"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/Sleavely/Bark-JS/raw/master/LICENSE"
-    }
-  ]
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ]
+  },
+  "license": "MIT"
 }

@@ -1,1 +1,1 @@
-module.exports = require('./lib/bark');
+module.exports = exports = require('./src/index')
