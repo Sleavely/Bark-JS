@@ -1,5 +1,5 @@
 
-const findSymbology = require('./utils/symbology')
+const findSymbology = require('./symbologies')
 const { parseAi } = require('./applicationIdentifiers')
 
 /**
