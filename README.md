@@ -1,10 +1,8 @@
 # Bark JS
 
- Parse barcode inputs into a unified GS1-128 format.
+[ ![npm version](https://img.shields.io/npm/v/bark-js.svg?style=flat) ](https://npmjs.org/package/bark-js "View this project on npm") [ ![Travis](https://img.shields.io/travis/Sleavely/Bark-JS) ](https://travis-ci.org/Sleavely/Bark-JS) [ ![Issues](https://img.shields.io/github/issues/Sleavely/Bark-JS.svg) ](https://github.com/Sleavely/Bark-JS/issues)
 
-## What it does
-
-Bark parses GS1-128 barcodes and extracts the catalogued data according to the [GS1 General Specifications (PDF)](https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf)
+Bark parses GS1-128 barcodes and extracts the catalogued data according to the [GS1 General Specifications (PDF)](https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf). It can also parse other SKU-related formats to convert into GTINs in GS1, such as EAN-13, ITF-14 and UPC-A.
 
 ## How to use it
 
