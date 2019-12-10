@@ -43,7 +43,7 @@ bark( '015730033004265615171019' )
 
 If you are going to scan simple barcodes too (e.g. UPC-A, EAN-13, ITF-14, etc.) you can set the `assumeGtin` option to convert shorter barcodes (11-14 digits) into GS1-128 codes with a GTIN AI:
 
-```
+```javascript
 const bark = require('bark-js')
 
 bark( '09002490100094', { assumeGtin: true } )
