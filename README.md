@@ -1,13 +1,10 @@
 # Bark JS
 
- Parse barcode inputs into a unified format.
-
+ Parse barcode inputs into a unified GS1-128 format.
 
 ## What it does
 
-Bark normalises and treats all barcode inputs as the GS1-128 format.
-
-Bark attempts to figure out which standard the string uses (EAN-8, EAN-13, ITF-14, GS1-128, etc.) and extracts the relevant data. It is accessed by querying Bark for the GS1 Application Identifier's Data Title. For a reference of the Data Titles, see the right-most column here: [GS1 General Specifications Section 3.2: GS1 Application Identifier Definitions (PDF)](https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf)
+Bark parses GS1-128 barcodes and extracts the catalogued data according to the [GS1 General Specifications (PDF)](https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf)
 
 ## How to use it
 
@@ -20,34 +17,76 @@ npm install bark-js
 Let's pretend we scan [the box in this photo](https://goo.gl/photos/HCE7WrNHDKvQL5ei8).
 
 ```javascript
-var Bark = require('bark-js');
-var yourInput = '015730033004265615171019';
+const bark = require('bark-js')
 
-console.log(Bark.parse( yourInput )); // parse returns the GTIN, or undefined
-
-// Always set after successful parse
-console.log(Bark.type); // GS1-128
-
-// These Application Identifiers (AIs) exist in the barcode
-console.log(Bark.get('GTIN')); // 57300330042656
-console.log(Bark.get('BEST BEFORE')); // 171019
-
-// The SERIAL AI is not set on this barcode
-console.log(Bark.get('SERIAL')); // null
+bark( '015730033004265615171019' )
+// returns:
+{
+  symbology: 'unknown',
+  elements: [
+    {
+      ai: '01',
+      title: 'GTIN',
+      value: '57300330042656',
+      raw: '57300330042656'
+    },
+    {
+      ai: '15',
+      title: 'BEST BEFORE or BEST BY',
+      value: '2017-10-19',
+      raw: '171019'
+    }
+  ],
+  originalBarcode: '015730033004265615171019'
+}
 ```
 
-If you are going to scan regular barcodes too (e.g. EAN-13, ITF-14, etc.) and only want to get the GTIN, we suggest you use the `id()` method.
+If you are going to scan simple barcodes too (e.g. UPC-A, EAN-13, ITF-14, etc.) you can set the `assumeGtin` option to convert shorter barcodes (11-14 digits) into GS1-128 codes with a GTIN AI:
 
-The important distinction from `parse()` is that `id()` will return the string itself if the barcode was not interpreted as GS1-128.
+```
+const bark = require('bark-js')
+
+bark( '09002490100094', { assumeGtin: true } )
+// returns:
+{
+  symbology: 'unknown',
+  elements: [
+    {
+      ai: '01',
+      title: 'GTIN',
+      value: '09002490100094',
+      raw: '09002490100094'
+    }
+  ],
+  originalBarcode: '0109002490100094'
+}
+```
+
+Depending on your barcode reader, you may receive FNC characters that arent the `<GS>` (ASCII 29) character. To set the group separator yourself, pass the `fnc` option:
 
 ```javascript
-var Bark = require('bark-js');
-var yourInput = '015730033004265615171019';
+const bark = require('bark-js')
 
-console.log(Bark.id( yourInput )); // 57300330042656
-
-yourInput = 'Foo-And-Oth3r-Bars';
-console.log(Bark.id( yourInput )); // Foo-And-Oth3r-Bars
+bark( '10FRIDGEX0109002490100094', { fnc: 'X' } )
+// returns:
+{
+  symbology: 'unknown',
+  elements: [
+    {
+      ai: '10',
+      title: 'BATCH/LOT',
+      value: 'FRIDGE',
+      raw: 'FRIDGEX'
+    },
+    {
+      ai: '01',
+      title: 'GTIN',
+      value: '09002490100094',
+      raw: '09002490100094'
+    }
+  ],
+  originalBarcode: '10FRIDGEX0109002490100094'
+}
 ```
 
 ## Contributing
