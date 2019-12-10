@@ -1,6 +1,6 @@
 {
   "name": "bark-js",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Parse barcode inputs into a unified GS1-128 like format",
   "homepage": "https://github.com/Sleavely/Bark-js",
   "repository": "github:Sleavely/Bark-JS",
