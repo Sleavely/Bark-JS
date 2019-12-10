@@ -17,8 +17,7 @@
   "scripts": {
     "test": "jest --verbose --silent && eslint ."
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "eslint": "^5.16.0",
