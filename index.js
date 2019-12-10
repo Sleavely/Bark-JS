@@ -1,1 +1,1 @@
-module.exports = exports = require('./src/bark')
+module.exports = exports = require('./src/index')

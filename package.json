@@ -13,7 +13,7 @@
     "UPC",
     "GS1"
   ],
-  "main": "lib/main.js",
+  "main": "index.js",
   "scripts": {
     "test": "jest --verbose --silent && eslint ."
   },
