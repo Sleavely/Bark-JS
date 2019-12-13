@@ -466,7 +466,7 @@ it.each([
   // ['8020', 'REF No'],
   // ['8026', 'ITIP CONTENT'],
   // ['8111', 'POINTS'],
-  // ['8200', 'PRODUCT URL'],
+  ['8200', 'PRODUCT URL'],
   ['90', 'INTERNAL'],
   ['91', 'INTERNAL'],
   ['92', 'INTERNAL'],

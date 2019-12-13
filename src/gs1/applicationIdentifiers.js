@@ -289,6 +289,12 @@ exports.parseAi = (barcode) => {
           return { ai: '427', title: 'ORIGIN SUBDIVISION', parser: variableLength(3) }
       }
       break
+    case '8':
+      switch (barcode.slice(1, 4)) {
+        case '200':
+          return { ai: '8200', title: 'PRODUCT URL', parser: variableLength(70) }
+      }
+      break
     case '9':
       switch (barcode.slice(1, 2)) {
         case '0':
