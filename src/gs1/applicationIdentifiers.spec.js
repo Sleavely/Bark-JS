@@ -480,7 +480,19 @@ it.each([
   const {
     ai,
     title,
+    parser,
   } = parseAi(expectedAi)
   expect(ai).toBe(expectedAi)
   expect(title).toBe(expectedTitle)
+  expect(parser).toBeFunction()
+})
+
+describe('custom parsers', () => {
+  it('appends human readable values for AI 7010', () => {
+    const { parser } = parseAi('7010')
+    expect(parser({ barcode: '02' })).toMatchObject({
+      value: '02',
+      human: 'Caught in Fresh Water',
+    })
+  })
 })

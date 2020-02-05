@@ -3,6 +3,7 @@ const {
   fixedLength,
   variableLength,
   date,
+  dateRange,
   fixedLengthDecimal,
   variableLengthDecimal,
   variableLengthISOCurrency,
@@ -287,6 +288,52 @@ exports.parseAi = (barcode) => {
           return { ai: '426', title: 'COUNTRY - FULL PROCESS', parser: fixedLength(3) }
         case '27':
           return { ai: '427', title: 'ORIGIN SUBDIVISION', parser: variableLength(3) }
+      }
+      break
+    case '7':
+      switch (barcode.slice(1, 3)) {
+        case '00':
+          switch (barcode.slice(3, 4)) {
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+              return { ai: '700*', title: 'UNKNOWN', parser: variableLength(30) }
+            case '6':
+              return { ai: '7006', title: 'FIRST FREEZE DATE', parser: date() }
+            case '7':
+              return { ai: '7007', title: 'HARVEST DATE', parser: dateRange() }
+            case '8':
+              return { ai: '7008', title: 'AQUATIC SPECIES', parser: variableLength(3) }
+            case '9':
+              return { ai: '7009', title: 'FISHING GEAR TYPE', parser: variableLength(10) }
+          }
+          break
+        case '01':
+          return { ai: '7010',
+            title: 'PROD METHOD',
+            parser: (opts) => (output => {
+              const humanMapping = {
+                '01': 'Caught at Sea',
+                '02': 'Caught in Fresh Water',
+                '03': 'Farmed',
+                '04': 'Cultivated',
+              }
+              return { ...output, human: humanMapping[output.value] }
+            })(variableLength(2)(opts)) }
+
+        case '02':
+          switch (barcode.slice(3, 4)) {
+            case '0':
+              return { ai: '7020', title: '???' }
+            case '1':
+              return { ai: '7020', title: '???' }
+            case '2':
+              return { ai: '7020', title: '???' }
+            case '3':
+              return { ai: '7020', title: '???' }
+          }
       }
       break
     case '8':
