@@ -11,6 +11,7 @@ const {
 } = require('./dataReaders')
 
 it('has tests for all exported parsers', () => {
+  // A gentle reminder to whomever.
   expect(Object.keys(require('./dataReaders'))).toEqual([
     'fixedLength',
     'variableLength',
