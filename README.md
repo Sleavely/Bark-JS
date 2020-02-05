@@ -39,7 +39,7 @@ bark( '015730033004265615171019' )
 }
 ```
 
-If you are going to scan simple barcodes too (e.g. UPC-A, EAN-13, ITF-14, etc.) you can set the `assumeGtin` option to convert shorter barcodes (11-14 digits) into GS1-128 codes with a GTIN AI:
+If you are going to scan simple barcodes (e.g. UPC-A, EAN-13, ITF-14, etc.) you can set the `assumeGtin` option to treat shorter barcodes (11-14 digits) as GS1-128 with a GTIN AI:
 
 ```javascript
 const bark = require('bark-js')
@@ -84,6 +84,29 @@ bark( '10FRIDGEX0109002490100094', { fnc: 'X' } )
     }
   ],
   originalBarcode: '10FRIDGEX0109002490100094'
+}
+```
+
+Depending on the type of elements in your code, the parsers may append additional fields to such as `isoCurrencyCode` and `amount` for your convenience:
+
+```javascript
+const bark = require('bark-js')
+
+bark( '393297817999' )
+// returns:
+{
+  symbology: 'unknown',
+  elements: [
+    {
+      ai: '3932',
+      title: 'PRICE',
+      value: '978179.99',
+      isoCurrencyCode: '978',
+      amount: '179.99',
+      raw: '97817999'
+    }
+  ],
+  originalBarcode: '393297817999'
 }
 ```
 
