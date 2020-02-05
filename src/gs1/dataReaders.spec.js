@@ -7,6 +7,7 @@ const {
   variableLengthISOCurrency,
   variableLengthISOCountry,
   date,
+  dateRange,
 } = require('./dataReaders')
 
 it('has tests for all exported parsers', () => {
@@ -18,6 +19,7 @@ it('has tests for all exported parsers', () => {
     'variableLengthISOCurrency',
     'variableLengthISOCountry',
     'date',
+    'dateRange',
   ])
 })
 
@@ -203,5 +205,26 @@ describe('date()', () => {
   it('parses as YYMMDD with century-correction', () => {
     expect(date()({ barcode: '990203' }).value).toBe('1999-02-03')
     expect(date()({ barcode: '010203' }).value).toBe('2001-02-03')
+  })
+})
+
+describe('dateRange()', () => {
+  it('is a curry-function', () => {
+    expect(dateRange).toBeInstanceOf(Function)
+    expect(dateRange()).toBeInstanceOf(Function)
+  })
+  it('uses a max length of 12', () => {
+    expect(dateRange()({ barcode: '010203040506070809' }).raw).toBe('010203040506')
+  })
+  it('parses as YYMMDDYYMMDD with century-correction', () => {
+    expect(dateRange()({ barcode: '990203010405' }).value).toBe('1999-02-03 - 2001-04-05')
+    expect(dateRange()({ barcode: '010203010204' }).value).toBe('2001-02-03 - 2001-02-04')
+  })
+  it('allows YYMMDD input with FNC to denote a single date', () => {
+    const FNC = String.fromCharCode(29)
+    expect(dateRange()({ barcode: `010405${FNC}` })).toMatchObject({
+      value: '2001-04-05',
+      raw: `010405${FNC}`,
+    })
   })
 })

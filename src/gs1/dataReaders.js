@@ -131,3 +131,23 @@ exports.date = () => ({
     raw,
   }
 }
+
+/**
+ * Parses YYMMDDYYMMDD (Start-End) and YYMMDD (Start and End on same date)
+ */
+exports.dateRange = () => ({
+  barcode,
+  fnc = String.fromCharCode(29),
+}) => {
+  const varLength = exports.variableLength(12)({ barcode, fnc })
+  const hasTwoDates = varLength.value.length > 6
+  const firstDate = exports.date()({ barcode: barcode.slice(0, 6), fnc })
+  const secondDate = exports.date()({ barcode: barcode.slice(6), fnc })
+
+  // "In case the period spans one calendar day, the end date SHALL NOT be specified." - section 3.8.8
+  const value = `${firstDate.value}${hasTwoDates ? ' - ' + secondDate.value : ''}`
+  return {
+    value,
+    raw: varLength.raw,
+  }
+}
