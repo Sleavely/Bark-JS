@@ -312,5 +312,5 @@ exports.parseAi = (barcode) => {
       }
       break
   }
-  throw new Error(`Invalid AI at start of barcode: ${barcode}`)
+  throw new Error(`Invalid AI at start of barcode section: ${barcode}. This likely occurred because your barcode has a value that is longer than the permitted max length for a particular AI.`)
 }
