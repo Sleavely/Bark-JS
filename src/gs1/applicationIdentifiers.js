@@ -3,6 +3,7 @@ const {
   fixedLength,
   variableLength,
   date,
+  dateTime,
   dateRange,
   fixedLengthDecimal,
   variableLengthDecimal,
@@ -295,11 +296,15 @@ exports.parseAi = (barcode) => {
         case '00':
           switch (barcode.slice(3, 4)) {
             case '1':
+              return { ai: '7001', title: 'NSN', parser: fixedLength(13) }
             case '2':
+              return { ai: '7002', title: 'MEAT CUT', parser: variableLength(30) }
             case '3':
+              return { ai: '7003', title: 'EXPIRY TIME', parser: dateTime() }
             case '4':
+              return { ai: '7004', title: 'ACTIVE POTENCY', parser: variableLength(4) }
             case '5':
-              return { ai: '700*', title: 'UNKNOWN', parser: variableLength(30) }
+              return { ai: '7005', title: 'CATCH AREA', parser: variableLength(12) }
             case '6':
               return { ai: '7006', title: 'FIRST FREEZE DATE', parser: date() }
             case '7':
@@ -326,14 +331,48 @@ exports.parseAi = (barcode) => {
         case '02':
           switch (barcode.slice(3, 4)) {
             case '0':
-              return { ai: '7020', title: '???' }
+              return { ai: '7020', title: 'REFURB LOT', parser: variableLength(20) }
             case '1':
-              return { ai: '7020', title: '???' }
+              return { ai: '7021', title: 'FUNC STAT', parser: variableLength(20) }
             case '2':
-              return { ai: '7020', title: '???' }
+              return { ai: '7022', title: 'REV STAT', parser: variableLength(20) }
             case '3':
-              return { ai: '7020', title: '???' }
+              return { ai: '7023', title: 'GIAI - ASSEMBLY', parser: variableLength(30) }
           }
+          break
+
+        case '03':
+          const processor = barcode.slice(3, 4)
+          return { ai: barcode.slice(0, 4), title: `PROCESSOR # ${processor}`, parser: variableLengthISOCountry(33) }
+
+        case '04':
+          switch (barcode.slice(3, 4)) {
+            case '0':
+              return { ai: '7040', title: 'UIC+EXT', parser: variableLength(4) }
+          }
+          break
+
+        case '10':
+          return { ai: '710', title: 'NHRN PZN', parser: variableLength(20) }
+        case '11':
+          return { ai: '711', title: 'NHRN CIP', parser: variableLength(20) }
+        case '12':
+          return { ai: '712', title: 'NHRN CN', parser: variableLength(20) }
+        case '13':
+          return { ai: '713', title: 'NHRN DRN', parser: variableLength(20) }
+        case '14':
+          return { ai: '714', title: 'NHRN AIM', parser: variableLength(20) }
+
+        case '23':
+          const certReference = barcode.slice(3, 4)
+          return { ai: barcode.slice(0, 4), title: `CERT # ${certReference}`, parser: variableLength(30) }
+
+        case '24':
+          switch (barcode.slice(3, 4)) {
+            case '0':
+              return { ai: '7240', title: 'PROTOCOL', parser: variableLength(20) }
+          }
+          break
       }
       break
     case '8':
