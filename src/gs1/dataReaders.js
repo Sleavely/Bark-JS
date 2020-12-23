@@ -133,6 +133,29 @@ exports.date = () => ({
 }
 
 /**
+ * Parses YYMMDDHHmm
+ */
+exports.dateTime = () => ({
+  barcode,
+  fnc = String.fromCharCode(29),
+}) => {
+  const { value: yymmddhhmm, raw } = this.fixedLength(10)({ barcode, fnc })
+
+  const { value: yymmdd } = this.date()({
+    barcode: yymmddhhmm.slice(0, 6),
+    fnc,
+  })
+
+  const hh = yymmddhhmm.slice(6, 8)
+  const mm = yymmddhhmm.slice(8)
+
+  return {
+    value: `${yymmdd} ${hh}:${mm}`,
+    raw,
+  }
+}
+
+/**
  * Parses YYMMDDYYMMDD (Start-End) and YYMMDD (Start and End on same date)
  */
 exports.dateRange = () => ({
