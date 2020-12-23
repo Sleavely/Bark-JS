@@ -7,28 +7,35 @@ const {
   variableLengthISOCurrency,
   variableLengthISOCountry,
   date,
+  dateTime,
   dateRange,
 } = require('./dataReaders')
 
+const expectedReaders = [
+  ['fixedLength', fixedLength],
+  ['variableLength', variableLength],
+  ['fixedLengthDecimal', fixedLengthDecimal],
+  ['variableLengthDecimal', variableLengthDecimal],
+  ['variableLengthISOCurrency', variableLengthISOCurrency],
+  ['variableLengthISOCountry', variableLengthISOCountry],
+  ['date', date],
+  ['dateTime', dateTime],
+  ['dateRange', dateRange],
+]
+
 it('has tests for all exported parsers', () => {
   // A gentle reminder to whomever.
-  expect(Object.keys(require('./dataReaders'))).toEqual([
-    'fixedLength',
-    'variableLength',
-    'fixedLengthDecimal',
-    'variableLengthDecimal',
-    'variableLengthISOCurrency',
-    'variableLengthISOCountry',
-    'date',
-    'dateRange',
-  ])
+  expect(Object.keys(require('./dataReaders'))).toEqual(expectedReaders.map(([readerName]) => readerName))
+})
+
+describe.each(expectedReaders)('%s()', (readerName, readerFn) => {
+  it('is a curry-function', () => {
+    expect(readerFn).toBeInstanceOf(Function)
+    expect(readerFn()).toBeInstanceOf(Function)
+  })
 })
 
 describe('fixedLength()', () => {
-  it('is a curry-function', () => {
-    expect(fixedLength).toBeInstanceOf(Function)
-    expect(fixedLength()).toBeInstanceOf(Function)
-  })
   it('throws when barcode is omitted', () => {
     expect(() => {
       fixedLength(1337)()
@@ -57,10 +64,6 @@ describe('fixedLength()', () => {
 })
 
 describe('variableLength()', () => {
-  it('is a curry-function', () => {
-    expect(variableLength).toBeInstanceOf(Function)
-    expect(variableLength()).toBeInstanceOf(Function)
-  })
   it('throws when barcode is omitted', () => {
     expect(() => {
       variableLength()()
@@ -98,10 +101,6 @@ describe('variableLength()', () => {
 })
 
 describe('fixedLengthDecimal()', () => {
-  it('is a curry-function', () => {
-    expect(fixedLengthDecimal).toBeInstanceOf(Function)
-    expect(fixedLengthDecimal()).toBeInstanceOf(Function)
-  })
   it('respects the length', () => {
     expect(fixedLengthDecimal(2)({ barcode: '1234567890' }).value).toBe('12')
   })
@@ -111,10 +110,6 @@ describe('fixedLengthDecimal()', () => {
 })
 
 describe('variableLengthDecimal()', () => {
-  it('is a curry-function', () => {
-    expect(variableLengthDecimal).toBeInstanceOf(Function)
-    expect(variableLengthDecimal()).toBeInstanceOf(Function)
-  })
   it('respects the maxLength', () => {
     expect(variableLengthDecimal(2)({ barcode: '1234567890' }).value).toBe('12')
   })
@@ -128,10 +123,6 @@ describe('variableLengthDecimal()', () => {
 })
 
 describe('variableLengthISOCurrency()', () => {
-  it('is a curry-function', () => {
-    expect(variableLengthISOCurrency).toBeInstanceOf(Function)
-    expect(variableLengthISOCurrency()).toBeInstanceOf(Function)
-  })
   it('throws when barcode is omitted', () => {
     expect(() => {
       variableLengthISOCurrency()()
@@ -165,10 +156,6 @@ describe('variableLengthISOCurrency()', () => {
 })
 
 describe('variableLengthISOCountry()', () => {
-  it('is a curry-function', () => {
-    expect(variableLengthISOCountry).toBeInstanceOf(Function)
-    expect(variableLengthISOCountry()).toBeInstanceOf(Function)
-  })
   it('throws when barcode is omitted', () => {
     expect(() => {
       variableLengthISOCountry()()
@@ -196,24 +183,32 @@ describe('variableLengthISOCountry()', () => {
 })
 
 describe('date()', () => {
-  it('is a curry-function', () => {
-    expect(date).toBeInstanceOf(Function)
-    expect(date()).toBeInstanceOf(Function)
-  })
   it('uses a fixed length of 6', () => {
     expect(date()({ barcode: '0102030405' }).raw).toBe('010203')
   })
-  it('parses as YYMMDD with century-correction', () => {
-    expect(date()({ barcode: '990203' }).value).toBe('1999-02-03')
+  it('returns values in YYYY-MM-DD format', () => {
     expect(date()({ barcode: '010203' }).value).toBe('2001-02-03')
+  })
+  it('parses as YYMMDD with century-correction', () => {
+    expect(date()({ barcode: '990203' }).value).toMatch(/^1999/)
+    expect(date()({ barcode: '010203' }).value).toMatch(/^2001/)
+  })
+})
+
+describe('dateTime()', () => {
+  it('uses a fixed length of 10', () => {
+    expect(dateTime()({ barcode: '01020304050607' }).raw).toBe('0102030405')
+  })
+  it('returns values in YYYY-MM-DD HH:mm format', () => {
+    expect(dateTime()({ barcode: '9001071337' }).value).toBe('1990-01-07 13:37')
+  })
+  it('parses as YYMMDD with century-correction', () => {
+    expect(dateTime()({ barcode: '990203' }).value).toMatch(/^1999/)
+    expect(dateTime()({ barcode: '010203' }).value).toMatch(/^2001/)
   })
 })
 
 describe('dateRange()', () => {
-  it('is a curry-function', () => {
-    expect(dateRange).toBeInstanceOf(Function)
-    expect(dateRange()).toBeInstanceOf(Function)
-  })
   it('uses a max length of 12', () => {
     expect(dateRange()({ barcode: '010203040506070809' }).raw).toBe('010203040506')
   })

@@ -3,6 +3,8 @@ const {
   fixedLength,
   variableLength,
   date,
+  dateTime,
+  dateRange,
   fixedLengthDecimal,
   variableLengthDecimal,
   variableLengthISOCurrency,
@@ -287,6 +289,90 @@ exports.parseAi = (barcode) => {
           return { ai: '426', title: 'COUNTRY - FULL PROCESS', parser: fixedLength(3) }
         case '27':
           return { ai: '427', title: 'ORIGIN SUBDIVISION', parser: variableLength(3) }
+      }
+      break
+    case '7':
+      switch (barcode.slice(1, 3)) {
+        case '00':
+          switch (barcode.slice(3, 4)) {
+            case '1':
+              return { ai: '7001', title: 'NSN', parser: fixedLength(13) }
+            case '2':
+              return { ai: '7002', title: 'MEAT CUT', parser: variableLength(30) }
+            case '3':
+              return { ai: '7003', title: 'EXPIRY TIME', parser: dateTime() }
+            case '4':
+              return { ai: '7004', title: 'ACTIVE POTENCY', parser: variableLength(4) }
+            case '5':
+              return { ai: '7005', title: 'CATCH AREA', parser: variableLength(12) }
+            case '6':
+              return { ai: '7006', title: 'FIRST FREEZE DATE', parser: date() }
+            case '7':
+              return { ai: '7007', title: 'HARVEST DATE', parser: dateRange() }
+            case '8':
+              return { ai: '7008', title: 'AQUATIC SPECIES', parser: variableLength(3) }
+            case '9':
+              return { ai: '7009', title: 'FISHING GEAR TYPE', parser: variableLength(10) }
+          }
+          break
+        case '01':
+          return { ai: '7010',
+            title: 'PROD METHOD',
+            parser: (opts) => (output => {
+              const humanMapping = {
+                '01': 'Caught at Sea',
+                '02': 'Caught in Fresh Water',
+                '03': 'Farmed',
+                '04': 'Cultivated',
+              }
+              return { ...output, human: humanMapping[output.value] }
+            })(variableLength(2)(opts)) }
+
+        case '02':
+          switch (barcode.slice(3, 4)) {
+            case '0':
+              return { ai: '7020', title: 'REFURB LOT', parser: variableLength(20) }
+            case '1':
+              return { ai: '7021', title: 'FUNC STAT', parser: variableLength(20) }
+            case '2':
+              return { ai: '7022', title: 'REV STAT', parser: variableLength(20) }
+            case '3':
+              return { ai: '7023', title: 'GIAI - ASSEMBLY', parser: variableLength(30) }
+          }
+          break
+
+        case '03':
+          const processor = barcode.slice(3, 4)
+          return { ai: barcode.slice(0, 4), title: `PROCESSOR # ${processor}`, parser: variableLengthISOCountry(33) }
+
+        case '04':
+          switch (barcode.slice(3, 4)) {
+            case '0':
+              return { ai: '7040', title: 'UIC+EXT', parser: variableLength(4) }
+          }
+          break
+
+        case '10':
+          return { ai: '710', title: 'NHRN PZN', parser: variableLength(20) }
+        case '11':
+          return { ai: '711', title: 'NHRN CIP', parser: variableLength(20) }
+        case '12':
+          return { ai: '712', title: 'NHRN CN', parser: variableLength(20) }
+        case '13':
+          return { ai: '713', title: 'NHRN DRN', parser: variableLength(20) }
+        case '14':
+          return { ai: '714', title: 'NHRN AIM', parser: variableLength(20) }
+
+        case '23':
+          const certReference = barcode.slice(3, 4)
+          return { ai: barcode.slice(0, 4), title: `CERT # ${certReference}`, parser: variableLength(30) }
+
+        case '24':
+          switch (barcode.slice(3, 4)) {
+            case '0':
+              return { ai: '7240', title: 'PROTOCOL', parser: variableLength(20) }
+          }
+          break
       }
       break
     case '8':
