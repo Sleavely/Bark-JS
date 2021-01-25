@@ -133,13 +133,16 @@ exports.date = () => ({
 }
 
 /**
- * Parses YYMMDDHHmm
+ * Parses YYMMDDHH(mmss)
+ *
+ * @param optionalMinutesAndSeconds By default, YYMMDDHHmm is expected. This flag enables YYMMDDHH[mmss]
+ * @returns "YYYY-MM-DD HH:mm:ss"
  */
-exports.dateTime = () => ({
+exports.dateTime = ({ optionalMinutesAndSeconds = false } = {}) => ({
   barcode,
   fnc = String.fromCharCode(29),
 }) => {
-  const { value: yymmddhhmm, raw } = this.fixedLength(10)({ barcode, fnc })
+  const { value: yymmddhhmm, raw } = this.fixedLength(optionalMinutesAndSeconds ? 12 : 10)({ barcode, fnc })
 
   const { value: yymmdd } = this.date()({
     barcode: yymmddhhmm.slice(0, 6),
@@ -147,10 +150,11 @@ exports.dateTime = () => ({
   })
 
   const hh = yymmddhhmm.slice(6, 8)
-  const mm = yymmddhhmm.slice(8)
+  const mm = yymmddhhmm.slice(8, 10) || (optionalMinutesAndSeconds && '00')
+  const ss = yymmddhhmm.slice(10) || '00'
 
   return {
-    value: `${yymmdd} ${hh}:${mm}`,
+    value: `${yymmdd} ${hh}:${mm}:${ss}`,
     raw,
   }
 }
