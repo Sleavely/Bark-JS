@@ -377,6 +377,48 @@ exports.parseAi = (barcode) => {
       break
     case '8':
       switch (barcode.slice(1, 4)) {
+        case '001':
+          return { ai: '8001', title: 'DIMENSIONS', parser: variableLength(14) }
+        case '002':
+          return { ai: '8002', title: 'CMT No', parser: variableLength(14) }
+        case '003':
+          return { ai: '8003', title: 'GRAI', parser: variableLength(30) }
+        case '004':
+          return { ai: '8004', title: 'GIAI', parser: variableLength(30) }
+        case '005':
+          return { ai: '8005', title: 'PRICE PER UNIT', parser: variableLength(6) }
+        case '006':
+          return { ai: '8006', title: 'ITIP', parser: variableLength(18) }
+        case '007':
+          return { ai: '8007', title: 'IBAN', parser: variableLength(34) }
+        case '008':
+          return { ai: '8008', title: 'PROD TIME', parser: dateTime({ optionalMinutesAndSeconds: true }) }
+        case '009':
+          return { ai: '8009', title: 'OPTSEN', parser: variableLength(50) }
+        case '010':
+          return { ai: '8010', title: 'CPID', parser: variableLength(30) }
+        case '011':
+          return { ai: '8011', title: 'CPID SERIAL', parser: variableLength(12) }
+        case '012':
+          return { ai: '8012', title: 'VERSION', parser: variableLength(20) }
+        case '013':
+          return { ai: '8013', title: 'GMN', parser: variableLength(30) }
+        case '017':
+          return { ai: '8017', title: 'GSRN - PROVIDER', parser: variableLength(18) }
+        case '018':
+          return { ai: '8018', title: 'GSRN - RECIPIENT', parser: variableLength(18) }
+        case '019':
+          return { ai: '8019', title: 'SRIN', parser: variableLength(10) }
+        case '020':
+          return { ai: '8020', title: 'REF No', parser: variableLength(25) }
+        case '026':
+          return { ai: '8026', title: 'ITIP CONTENT', parser: variableLength(18) }
+        case '110':
+          return { ai: '8110', title: '', parser: variableLength(70) }
+        case '111':
+          return { ai: '8111', title: 'POINTS', parser: variableLength(4) }
+        case '112':
+          return { ai: '8112', title: '', parser: variableLength(70) }
         case '200':
           return { ai: '8200', title: 'PRODUCT URL', parser: variableLength(70) }
       }
