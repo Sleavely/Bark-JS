@@ -196,15 +196,31 @@ describe('date()', () => {
 })
 
 describe('dateTime()', () => {
-  it('uses a fixed length of 10', () => {
+  it('uses a fixed length of 10 by default', () => {
     expect(dateTime()({ barcode: '01020304050607' }).raw).toBe('0102030405')
   })
-  it('returns values in YYYY-MM-DD HH:mm format', () => {
-    expect(dateTime()({ barcode: '9001071337' }).value).toBe('1990-01-07 13:37')
+  it('returns values in YYYY-MM-DD HH:mm:ss format', () => {
+    expect(dateTime()({ barcode: '9001071337' }).value).toBe('1990-01-07 13:37:00')
   })
   it('parses as YYMMDD with century-correction', () => {
     expect(dateTime()({ barcode: '990203' }).value).toMatch(/^1999/)
     expect(dateTime()({ barcode: '010203' }).value).toMatch(/^2001/)
+  })
+  describe('dateTime({ optionalMinutesAndSeconds: true })', () => {
+    it('uses a fixed length of 12', () => {
+      expect(dateTime({ optionalMinutesAndSeconds: true })({ barcode: '01020304050607' }).raw).toBe('010203040506')
+    })
+    it('allows YYMMDDHHmmss', () => {
+      expect(dateTime({ optionalMinutesAndSeconds: true })({ barcode: '900107133755' }).value).toBe('1990-01-07 13:37:55')
+    })
+    it('allows YYMMDDHHmm', () => {
+      // (defaults seconds to 00)
+      expect(dateTime({ optionalMinutesAndSeconds: true })({ barcode: '0011222345' }).value).toBe('2000-11-22 23:45:00')
+    })
+    it('allows YYMMDDHH', () => {
+      // (defaults minutes and seconds to 00:00)
+      expect(dateTime({ optionalMinutesAndSeconds: true })({ barcode: '00112223' }).value).toBe('2000-11-22 23:00:00')
+    })
   })
 })
 
