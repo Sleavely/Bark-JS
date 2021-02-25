@@ -95,6 +95,50 @@ describe('unit', () => {
       originalBarcode: `101337${FNC}0112345678901234`,
     })
   })
+
+  it('allows multi-character FNC', () => {
+    const fnc = '{GS}'
+    const barcode = `107473020${fnc}217473020-000`
+
+    expect(parser({ barcode, fnc })).toMatchObject({
+      elements: [
+        {
+          ai: '10',
+          raw: `7473020${fnc}`,
+          title: 'BATCH/LOT',
+          value: '7473020',
+        },
+        {
+          ai: '21',
+          raw: '7473020-000',
+          title: 'SERIAL',
+          value: '7473020-000',
+        },
+      ],
+    })
+  })
+
+  it('allows multibyte (emoji) FNC', () => {
+    const fnc = '🥉'
+    const barcode = `107473020${fnc}217473020-000`
+
+    expect(parser({ barcode, fnc })).toMatchObject({
+      elements: [
+        {
+          ai: '10',
+          raw: `7473020${fnc}`,
+          title: 'BATCH/LOT',
+          value: '7473020',
+        },
+        {
+          ai: '21',
+          raw: '7473020-000',
+          title: 'SERIAL',
+          value: '7473020-000',
+        },
+      ],
+    })
+  })
 })
 
 describe('live examples parse as expected', () => {

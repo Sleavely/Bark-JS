@@ -25,7 +25,7 @@ exports.variableLength = (maxLength) => ({
   const characters = []
 
   for (const character of barcode) {
-    if (character === fnc || characters.length === maxLength) break
+    if ((character === fnc || (fnc.length > 1 && character === fnc[0])) || characters.length === maxLength) break
     characters.push(character)
   }
 
