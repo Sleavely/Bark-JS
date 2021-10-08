@@ -46,7 +46,7 @@ exports.fixedLengthDecimal = (length, decimalPositionFromEnd) => ({
   barcode,
   fnc = String.fromCharCode(29),
 }) => {
-  const { value: originalValue, raw } = this.fixedLength(length)({ barcode, fnc })
+  const { value: originalValue, raw } = exports.fixedLength(length)({ barcode, fnc })
   const value = injectDecimal(originalValue, decimalPositionFromEnd)
   return {
     value,
@@ -58,7 +58,7 @@ exports.variableLengthDecimal = (maxLength, decimalPositionFromEnd) => ({
   barcode,
   fnc = String.fromCharCode(29),
 }) => {
-  const { value: originalValue, raw } = this.variableLength(maxLength)({ barcode, fnc })
+  const { value: originalValue, raw } = exports.variableLength(maxLength)({ barcode, fnc })
   const value = injectDecimal(originalValue, decimalPositionFromEnd)
 
   return {
@@ -75,7 +75,7 @@ exports.variableLengthISOCurrency = (maxLength, decimalPositionFromEnd) => ({
   fnc = String.fromCharCode(29),
 }) => {
   const isoCurrencyCode = barcode.slice(0, 3)
-  const { value: amount, raw } = this.variableLengthDecimal(maxLength - 3, decimalPositionFromEnd)({
+  const { value: amount, raw } = exports.variableLengthDecimal(maxLength - 3, decimalPositionFromEnd)({
     barcode: barcode.slice(3),
     fnc,
   })
@@ -96,7 +96,7 @@ exports.variableLengthISOCountry = (maxLength) => ({
   fnc = String.fromCharCode(29),
 }) => {
   const isoCountryCode = barcode.slice(0, 3)
-  const { value, raw } = this.variableLength(maxLength - 3)({
+  const { value, raw } = exports.variableLength(maxLength - 3)({
     barcode: barcode.slice(3),
     fnc,
   })
@@ -115,7 +115,7 @@ exports.date = () => ({
   barcode,
   fnc = String.fromCharCode(29),
 }) => {
-  const { value: yymmdd, raw } = this.fixedLength(6)({ barcode, fnc })
+  const { value: yymmdd, raw } = exports.fixedLength(6)({ barcode, fnc })
 
   const year = parseInt(yymmdd.slice(0, 2), 10)
   const month = yymmdd.slice(2, 4)
@@ -166,10 +166,10 @@ exports.dateRange = () => ({
   barcode,
   fnc = String.fromCharCode(29),
 }) => {
-  const varLength = this.variableLength(12)({ barcode, fnc })
+  const varLength = exports.variableLength(12)({ barcode, fnc })
   const hasTwoDates = varLength.value.length > 6
-  const firstDate = this.date()({ barcode: barcode.slice(0, 6), fnc })
-  const secondDate = this.date()({ barcode: barcode.slice(6), fnc })
+  const firstDate = exports.date()({ barcode: barcode.slice(0, 6), fnc })
+  const secondDate = exports.date()({ barcode: barcode.slice(6), fnc })
 
   // "In case the period spans one calendar day, the end date SHALL NOT be specified." - section 3.8.8
   const value = `${firstDate.value}${hasTwoDates ? ' - ' + secondDate.value : ''}`
