@@ -26,15 +26,15 @@ const gs1Parser = ({
   // Let's iterate the code, one AI at a time.
   let currPos = 0
   while (currPos < barcode.length) {
-    const ai = parseAi(barcode.slice(currPos))
-    currPos += ai.ai.length
+    const { ai, title, parser } = parseAi(barcode.slice(currPos))
+    currPos += ai.length
 
-    const element = ai.parser({ barcode: barcode.slice(currPos), fnc })
+    const element = parser({ barcode: barcode.slice(currPos), fnc })
     currPos += element.raw.length
 
     const currentElement = {
-      ai: ai.ai,
-      title: ai.title,
+      ai,
+      title,
       ...element,
     }
     elements.push(currentElement)
