@@ -142,9 +142,9 @@ exports.dateTime = ({ optionalMinutesAndSeconds = false } = {}) => ({
   barcode,
   fnc = String.fromCharCode(29),
 }) => {
-  const { value: yymmddhhmm, raw } = this.fixedLength(optionalMinutesAndSeconds ? 12 : 10)({ barcode, fnc })
+  const { value: yymmddhhmm, raw } = exports.fixedLength(optionalMinutesAndSeconds ? 12 : 10)({ barcode, fnc })
 
-  const { value: yymmdd } = this.date()({
+  const { value: yymmdd } = exports.date()({
     barcode: yymmddhhmm.slice(0, 6),
     fnc,
   })
